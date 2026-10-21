@@ -1,0 +1,160 @@
+'use strict';
+/* Conteúdo da aba Cozinha: ideias, trocas, receitas e lista de compras */
+
+const IDEIAS = [
+  { t: '1ª refeição (quebra do jejum)', items: [
+    'Ovos mexidos com tomate e 1 fatia de pão integral',
+    'Crepioca de aveia recheada com frango ou cottage',
+    'Overnight oats de cacau e banana (deixa pronto na véspera)',
+    'Iogurte natural com morango, chia e canela',
+    'Omelete de forno (1 ou 2 pedaços) com folhas',
+    'Bolo de caneca de banana + café preto'
+  ] },
+  { t: 'Almoço e jantar: proteínas', items: [
+    'Frango grelhado ou desfiado temperado',
+    'Patinho moído ou em bife',
+    'Peixe assado (tilápia, salmão) ou sardinha, 2x por semana',
+    'Ovos (omelete, cozidos, mexidos)',
+    'Lentilha ou grão-de-bico, sozinhos ou junto com a carne'
+  ] },
+  { t: 'Almoço e jantar: acompanhamentos', items: [
+    'Salada à vontade: alface, rúcula, tomate, pepino, cenoura',
+    'Legumes assados: abobrinha, brócolis, berinjela, abóbora',
+    'Purê de couve-flor no lugar do purê de batata',
+    '1 concha de feijão ou lentilha',
+    'Arroz integral: até 3 colheres de sopa',
+    'Montagem: metade do prato de vegetais, 1/4 proteína, 1/4 carbo bom'
+  ] },
+  { t: 'Lanches', items: [
+    'Iogurte natural com fruta',
+    'Punhado de castanhas ou nozes (cerca de 30 g)',
+    'Maçã em fatias com canela e pasta de amendoim',
+    'Ovo cozido temperado',
+    'Cottage com tomate e orégano',
+    'Grão-de-bico crocante',
+    'Palitos de cenoura e pepino com pasta de atum'
+  ] }
+];
+
+const TROCAS = [
+  ['Brigadeiro', 'Brigadeiro de tâmara (2 unidades)'],
+  ['Sorvete', 'Sorvete de banana com cacau'],
+  ['Bolo de padaria', 'Bolo de caneca de banana'],
+  ['Chocolate ao leite', '2 quadradinhos de chocolate 70%'],
+  ['Biscoito recheado', 'Maçã com canela e pasta de amendoim'],
+  ['Refrigerante', 'Água com gás, limão e hortelã'],
+  ['Pão francês', 'Crepioca ou pão integral'],
+  ['Salgadinho', 'Grão-de-bico crocante'],
+  ['Açúcar no café', 'Canela (ou café puro mesmo)'],
+  ['Purê de batata', 'Purê de couve-flor'],
+  ['Pão de queijo da vitrine', 'Ovo cozido ou parfait de iogurte'],
+  ['Hambúrguer de lanchonete', 'Hambúrguer caseiro na air fryer']
+];
+
+const RECEITAS = [
+  /* ----- Doces naturais ----- */
+  { id: 'nicecream', cat: 'doce', n: 'Sorvete de banana com cacau', tempo: '5 min + congelar', rende: '2 porções',
+    ing: ['2 bananas maduras congeladas em rodelas', '1 col. (sopa) de cacau 100%', '2 col. (sopa) de leite ou iogurte natural', 'Canela a gosto'],
+    passos: ['Bata tudo no processador até ficar cremoso, raspando as laterais.', 'Sirva na hora ou congele por 30 min pra ficar mais firme.'],
+    dica: 'Textura de sorvete de verdade, sem nada de açúcar. Os meninos vão querer também.' },
+  { id: 'brigadeiro', cat: 'doce', n: 'Brigadeiro de tâmara', tempo: '15 min', rende: 'cerca de 12 unidades',
+    ing: ['1 xícara de tâmaras sem caroço', '2 col. (sopa) de cacau 100%', '2 col. (sopa) de pasta de amendoim integral', 'Cacau ou coco ralado sem açúcar pra enrolar'],
+    passos: ['Deixe as tâmaras de molho em água quente por 10 min e escorra.', 'Bata tudo no processador até virar uma massa.', 'Faça bolinhas, passe no cacau e leve à geladeira.'],
+    dica: 'É doce de verdade (açúcar da fruta). Porção: 2 unidades.' },
+  { id: 'mousse', cat: 'doce', n: 'Mousse de chocolate com abacate', tempo: '10 min + 1h', rende: '3 porções',
+    ing: ['1 abacate pequeno maduro', '1 banana madura', '3 col. (sopa) de cacau 100%', '3 col. (sopa) de iogurte natural', 'Canela ou baunilha'],
+    passos: ['Bata tudo no liquidificador ou processador até ficar liso.', 'Leve à geladeira por 1 hora.'],
+    dica: 'O sabor do abacate some, fica só a cremosidade. E é gordura boa pro colesterol.' },
+  { id: 'macaassada', cat: 'doce', n: 'Maçã assada com canela e nozes', tempo: '10 min', rende: '1 porção',
+    ing: ['1 maçã', 'Canela a gosto', '1 col. (sopa) de nozes picadas', '2 col. (sopa) de iogurte natural'],
+    passos: ['Corte a maçã em cubos ou ao meio e polvilhe canela.', 'Micro-ondas por 3 a 4 min ou air fryer a 180°C por 10 min.', 'Finalize com nozes e iogurte.'],
+    dica: 'Cheiro e gosto de torta de maçã.' },
+  { id: 'bananaassada', cat: 'doce', n: 'Banana assada com pasta de amendoim', tempo: '10 min', rende: '1 porção',
+    ing: ['1 banana', 'Canela a gosto', '1 col. (chá) de pasta de amendoim integral', '1 quadradinho de chocolate 70% (opcional)'],
+    passos: ['Corte a banana ao meio no comprimento e polvilhe canela.', 'Air fryer a 180°C por 8 min (ou frigideira tampada).', 'Finalize com a pasta de amendoim e o chocolate ralado.'],
+    dica: 'A banana assada carameliza sozinha e fica bem mais doce.' },
+  { id: 'mugcake', cat: 'doce', n: 'Bolo de caneca de banana', tempo: '5 min', rende: '1 porção',
+    ing: ['1 ovo', '1/2 banana amassada', '2 col. (sopa) de aveia', '1 col. (sopa) de cacau 100% (opcional)', '1 col. (café) de fermento', 'Canela a gosto'],
+    passos: ['Misture tudo numa caneca grande.', 'Micro-ondas por 1min30 a 2 min.'],
+    dica: 'Tem proteína do ovo e segura bem a vontade de doce do fim do dia (dentro da janela!).' },
+  { id: 'overnight', cat: 'doce', n: 'Overnight oats de cacau e banana', tempo: '5 min + 1 noite', rende: '1 porção',
+    ing: ['4 col. (sopa) de aveia', '1 col. (sopa) de chia', '150 ml de leite', '1 col. (sopa) de cacau 100%', '1 banana', '1 dose de whey (opcional)'],
+    passos: ['Misture aveia, chia, leite, cacau e meia banana amassada num pote.', 'Geladeira de um dia pro outro.', 'De manhã, finalize com a outra metade da banana em rodelas.'],
+    dica: 'Quebra do jejum pronta pra levar pra cafeteria.' },
+  { id: 'pudimchia', cat: 'doce', n: 'Pudim de chia com frutas vermelhas', tempo: '5 min + 3h', rende: '2 porções',
+    ing: ['3 col. (sopa) de chia', '250 ml de leite', '1/2 banana amassada', 'Baunilha', '1 xícara de frutas vermelhas'],
+    passos: ['Misture chia, leite, banana e baunilha.', 'Geladeira por 3 horas (mexa depois de 15 min pra não empelotar).', 'Cubra com as frutas vermelhas.'],
+    dica: 'Chia é fibra pura, ótima pro colesterol.' },
+  { id: 'morango', cat: 'doce', n: 'Morango com chocolate 70%', tempo: '5 min', rende: '1 porção',
+    ing: ['10 morangos', '2 quadradinhos de chocolate 70%'],
+    passos: ['Derreta o chocolate no micro-ondas de 20 em 20 segundos.', 'Mergulhe os morangos ou regue por cima.', 'Geladeira por 10 min.'],
+    dica: 'Parece sobremesa de restaurante, mas é fruta e um pouco de chocolate.' },
+  { id: 'picole', cat: 'doce', n: 'Picolé de iogurte com frutas', tempo: '10 min + 4h', rende: '6 picolés',
+    ing: ['2 potes de iogurte natural', '1 banana madura', '1 xícara de frutas vermelhas ou manga'],
+    passos: ['Bata o iogurte com a banana.', 'Coloque pedaços de fruta nas forminhas e complete com o creme.', 'Congele por 4 horas.'],
+    dica: 'Ótima receita pra fazer junto com os meninos.' },
+
+  /* ----- Salgadas ----- */
+  { id: 'omeleteforno', cat: 'salgada', n: 'Omelete de forno com legumes', tempo: '35 min', rende: '6 pedaços',
+    ing: ['8 ovos', '1 abobrinha ralada', '1 cenoura ralada', '1 tomate picado', '1/2 cebola picada', '3 col. (sopa) de ricota ou cottage', 'Sal, pimenta e orégano'],
+    passos: ['Bata os ovos e misture o restante.', 'Despeje numa forma untada com azeite.', 'Forno a 180°C por 25 a 30 min.'],
+    dica: 'Faça no domingo e resolva a 1ª refeição da semana.' },
+  { id: 'frangodesfiado', cat: 'salgada', n: 'Frango desfiado temperado', tempo: '40 min', rende: '6 porções',
+    ing: ['1 kg de peito de frango', '1 cebola', '3 dentes de alho', '2 tomates', 'Páprica, cúrcuma e sal', 'Cheiro-verde'],
+    passos: ['Cozinhe o frango na pressão com água e sal por 15 min.', 'Desfie com dois garfos ou na batedeira.', 'Refogue cebola, alho e tomate no azeite, junte o frango e os temperos.', 'Separe em potes pra semana.'],
+    dica: 'É a base da semana: crepioca, salada, sopa, abobrinha recheada.' },
+  { id: 'crepioca', cat: 'salgada', n: 'Crepioca de aveia recheada', tempo: '10 min', rende: '1 porção',
+    ing: ['2 ovos', '2 col. (sopa) de aveia', 'Sal', 'Recheio: frango desfiado, tomate e folhas (ou cottage com orégano)'],
+    passos: ['Bata os ovos com a aveia e o sal.', 'Frigideira antiaderente com um fio de azeite, 2 min de cada lado.', 'Recheie e dobre.'],
+    dica: 'Substitui o pão francês com muito mais proteína.' },
+  { id: 'peixe', cat: 'salgada', n: 'Peixe assado com limão e legumes', tempo: '30 min', rende: '2 porções',
+    ing: ['2 filés de tilápia ou salmão', '1 limão', '2 dentes de alho', 'Brócolis, abobrinha e cenoura em pedaços', 'Azeite, sal e ervas'],
+    passos: ['Tempere o peixe com limão, alho e sal.', 'Espalhe os legumes na assadeira com azeite e coloque o peixe por cima.', 'Forno a 200°C por 20 a 25 min.'],
+    dica: 'Peixe 2x por semana ajuda no colesterol.' },
+  { id: 'escondidinho', cat: 'salgada', n: 'Escondidinho de couve-flor com carne', tempo: '40 min', rende: '4 porções',
+    ing: ['1 couve-flor', '2 col. (sopa) de ricota', '500 g de patinho moído', '1 cebola, 2 dentes de alho e 1 tomate', 'Um pouco de queijo ralado'],
+    passos: ['Cozinhe a couve-flor e amasse com a ricota e sal, como um purê.', 'Refogue a carne com cebola, alho e tomate.', 'Monte: carne embaixo, purê em cima, um pouco de queijo.', 'Gratine no forno por 15 min.'],
+    dica: 'Comida de conforto sem a batata.' },
+  { id: 'lentilha', cat: 'salgada', n: 'Salada de lentilha com atum', tempo: '20 min', rende: '2 porções',
+    ing: ['1 xícara de lentilha cozida al dente', '1 lata de atum em água', 'Tomate, pepino e cebola roxa picados', 'Salsinha', 'Limão, azeite e sal'],
+    passos: ['Misture tudo.', 'Tempere com limão, azeite e sal e leve à geladeira.'],
+    dica: 'Fibra + proteína: uma das melhores combinações pro colesterol.' },
+  { id: 'hamburguer', cat: 'salgada', n: 'Hambúrguer caseiro na air fryer', tempo: '20 min', rende: '4 hambúrgueres',
+    ing: ['500 g de patinho moído', '1 ovo', '2 col. (sopa) de aveia', 'Cebola ralada, alho, sal e páprica'],
+    passos: ['Misture tudo e modele 4 discos.', 'Air fryer a 200°C por 10 a 12 min, virando na metade.', 'Sirva com salada, ou no pão integral.'],
+    dica: 'Noite de hambúrguer com os meninos sem sair do plano.' },
+  { id: 'abobrinha', cat: 'salgada', n: 'Abobrinha recheada com frango', tempo: '30 min', rende: '2 porções',
+    ing: ['2 abobrinhas', '1 xícara de frango desfiado', '1 tomate picado', '2 col. (sopa) de ricota', 'Um pouco de queijo ralado'],
+    passos: ['Corte as abobrinhas no comprimento e retire o miolo.', 'Pique o miolo e misture com frango, tomate e ricota.', 'Recheie, polvilhe queijo e asse a 200°C por 15 a 20 min.'] },
+  { id: 'sopa', cat: 'salgada', n: 'Sopa de legumes com frango', tempo: '35 min', rende: '4 porções',
+    ing: ['2 cenouras', '1 abobrinha', '1 chuchu ou 1 fatia de abóbora', '1 xícara de frango desfiado', '1 cebola e 2 dentes de alho', 'Cheiro-verde'],
+    passos: ['Refogue cebola e alho, junte os legumes picados e cubra com água.', 'Cozinhe por 20 min.', 'Junte o frango e ajuste o sal.'],
+    dica: 'Jantar leve pra fechar a janela às 19h.' },
+
+  /* ----- Lanches ----- */
+  { id: 'graobico', cat: 'lanche', n: 'Grão-de-bico crocante', tempo: '25 min', rende: '4 porções',
+    ing: ['2 xícaras de grão-de-bico cozido e bem seco', '1 col. (sopa) de azeite', 'Páprica defumada, sal e alho em pó'],
+    passos: ['Misture tudo.', 'Air fryer a 200°C por 15 a 20 min, chacoalhando a cesta.'],
+    dica: 'Crocante como salgadinho, mas com fibra e proteína.' },
+  { id: 'pastaatum', cat: 'lanche', n: 'Pasta de atum com iogurte', tempo: '5 min', rende: '3 porções',
+    ing: ['1 lata de atum em água', '3 col. (sopa) de iogurte natural', 'Limão', 'Cebolinha', 'Sal e pimenta'],
+    passos: ['Misture tudo.', 'Sirva com palitos de cenoura e pepino ou na crepioca.'] },
+  { id: 'parfait', cat: 'lanche', n: 'Parfait de iogurte', tempo: '5 min', rende: '1 porção',
+    ing: ['1 pote de iogurte natural ou grego sem açúcar', '1/2 xícara de morangos ou frutas vermelhas', '1 col. (sopa) de chia ou castanhas', 'Canela'],
+    passos: ['Monte em camadas num copo.'],
+    dica: 'O lanche das 17h que parece sobremesa.' },
+  { id: 'ovoscozidos', cat: 'lanche', n: 'Ovos cozidos temperados', tempo: '15 min', rende: '6 ovos',
+    ing: ['6 ovos', 'Sal, páprica e orégano'],
+    passos: ['Cozinhe por 9 min e esfrie em água gelada.', 'Descasque e guarde na geladeira.', 'Tempere na hora de comer.'],
+    dica: 'Lanche pronto pra levar pra cafeteria.' }
+];
+
+const COMPRAS = [
+  { cat: 'Hortifrúti', items: ['Alface ou rúcula', 'Tomate', 'Pepino', 'Cenoura', 'Abobrinha', 'Brócolis', 'Couve-flor', 'Cebola', 'Alho', 'Limão', 'Cheiro-verde', 'Banana (1 penca)', 'Maçã', 'Morango', 'Abacate', 'Mamão ou manga'] },
+  { cat: 'Proteínas', items: ['Peito de frango (1,5 kg)', 'Patinho moído (500 g)', 'Ovos (2 dúzias)', 'Filé de peixe ou salmão (2 porções)', 'Sardinha em lata', 'Atum em água (2 latas)'] },
+  { cat: 'Laticínios', items: ['Iogurte natural sem açúcar (6 potes)', 'Iogurte grego sem açúcar', 'Ricota ou cottage', 'Leite'] },
+  { cat: 'Grãos e leguminosas', items: ['Aveia em flocos', 'Feijão', 'Lentilha', 'Grão-de-bico', 'Pão integral', 'Arroz integral'] },
+  { cat: 'Despensa', items: ['Azeite extra virgem', 'Pasta de amendoim integral (100% amendoim)', 'Castanhas ou nozes', 'Chia', 'Cacau em pó 100%', 'Chocolate 70%', 'Tâmaras', 'Canela', 'Páprica, cúrcuma e orégano', 'Café', 'Whey (opcional)'] },
+  { cat: 'Congelados', items: ['Frutas vermelhas congeladas', 'Mix de legumes congelados'] },
+  { cat: 'Bebidas', items: ['Água com gás', 'Chás (hibisco, verde, camomila)'] }
+];

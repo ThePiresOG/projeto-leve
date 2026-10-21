@@ -220,6 +220,11 @@ function renderHoje() {
         </label>`).join('')}
     </div>
 
+    <div class="card sweet">
+      <div><h2>Bateu vontade de doce?</h2><p class="muted small" style="margin-top:4px">${RECEITAS.filter((r) => r.cat === 'doce').length} receitas naturalmente doces, sem açúcar.</p></div>
+      <button class="btn primary" data-doce>Ver receitas</button>
+    </div>
+
     <div class="card">
       <div class="card-head">
         <div><div class="streak tnum">${streak()}</div><div class="muted small">dias seguidos com 75% ou mais</div></div>
@@ -449,8 +454,115 @@ function renderPlano() {
     <p class="muted small" style="margin:0 4px">Plano de referência. Vale validar com seu médico ou nutricionista, principalmente por causa do colesterol.</p>`;
 }
 
+/* ---------- View: Cozinha ---------- */
+let cozSub = 'ideias', recFilter = 'todas';
+function shop() {
+  S.shop ||= {};
+  S.shop.done ||= {}; S.shop.extra ||= [];
+  return S.shop;
+}
+function shopGroups() {
+  const sh = shop();
+  const groups = [];
+  const own = sh.extra.filter((x) => !x.src), rec = sh.extra.filter((x) => x.src);
+  if (own.length) groups.push({ cat: 'Meus itens', list: own.map((x) => ({ id: x.id, n: x.n, rm: true })) });
+  COMPRAS.forEach((c) => groups.push({ cat: c.cat, list: c.items.map((n) => ({ id: 'b:' + n, n })) }));
+  if (rec.length) groups.push({ cat: 'Das receitas', list: rec.map((x) => ({ id: x.id, n: x.n, src: x.src, rm: true })) });
+  return groups;
+}
+const CAT_LABEL = { doce: 'Doce natural', salgada: 'Salgada', lanche: 'Lanche' };
+function renderCozinha() {
+  const seg = `<div class="seg">${[['ideias', 'Ideias'], ['receitas', 'Receitas'], ['compras', 'Compras']]
+    .map(([k, l]) => `<button class="${cozSub === k ? 'on' : ''}" data-csub="${k}">${l}</button>`).join('')}</div>`;
+  let body = '';
+
+  if (cozSub === 'ideias') {
+    body = IDEIAS.map((s) => `
+      <div class="card"><h2 style="margin-bottom:6px">${esc(s.t)}</h2>
+        <ul class="list">${s.items.map((i) => `<li>${esc(i)}</li>`).join('')}</ul></div>`).join('') + `
+      <div class="card">
+        <h2>Trocas inteligentes</h2>
+        <p class="muted small" style="margin:4px 0 8px">Bateu vontade? Em vez de cortar, troque.</p>
+        ${TROCAS.map(([a, b]) => `<div class="swap"><span class="from">${esc(a)}</span><span class="arrow" aria-hidden="true">→</span><span class="to">${esc(b)}</span></div>`).join('')}
+      </div>`;
+  }
+
+  if (cozSub === 'receitas') {
+    const chips = [['todas', 'Todas'], ['doce', 'Doces naturais'], ['salgada', 'Salgadas'], ['lanche', 'Lanches']];
+    const list = RECEITAS.filter((r) => recFilter === 'todas' || r.cat === recFilter);
+    body = `
+      <div class="chips">${chips.map(([k, l]) => `<button class="chip ${recFilter === k ? 'on' : ''}" data-rfilter="${k}">${l}</button>`).join('')}</div>
+      ${recFilter === 'doce' ? '<p class="muted small" style="margin:0 4px 12px">Sem açúcar adicionado: a doçura vem da fruta, da canela e do cacau. Mesmo assim, respeite a porção.</p>' : ''}
+      ${list.map((r) => `
+        <details class="card recipe">
+          <summary>
+            <div class="r-head">
+              <span class="pill ${r.cat === 'doce' ? 'amber' : ''}">${CAT_LABEL[r.cat]}</span>
+              <h3>${esc(r.n)}</h3>
+              <div class="muted small">${esc(r.tempo)} · ${esc(r.rende)}</div>
+            </div>
+          </summary>
+          <div class="r-body">
+            <h4>Ingredientes</h4>
+            <ul>${r.ing.map((i) => `<li>${esc(i)}</li>`).join('')}</ul>
+            <h4>Modo de preparo</h4>
+            <ol>${r.passos.map((p) => `<li>${esc(p)}</li>`).join('')}</ol>
+            ${r.dica ? `<p class="r-tip">${esc(r.dica)}</p>` : ''}
+            <button class="btn ghost full" data-addrec="${r.id}">Adicionar ingredientes à lista</button>
+          </div>
+        </details>`).join('')}`;
+  }
+
+  if (cozSub === 'compras') {
+    const sh = shop(), groups = shopGroups();
+    const all = groups.flatMap((g) => g.list), done = all.filter((i) => sh.done[i.id]).length;
+    body = `
+      <div class="card">
+        <div class="card-head" style="margin-bottom:6px"><h2>Lista da semana</h2><span class="pill">${done}/${all.length}</span></div>
+        <p class="muted small">Base pensada pro plano. Marque o que já foi pro carrinho e ignore o que já tem em casa.</p>
+        <div class="bar"><i style="width:${all.length ? (done / all.length) * 100 : 0}%"></i></div>
+        <form id="shopForm" class="add-row">
+          <input type="text" name="novo" placeholder="Adicionar item" autocomplete="off" aria-label="Novo item">
+          <button class="btn primary">Adicionar</button>
+        </form>
+        <div class="actions">
+          <button class="btn ghost" data-shopshare>Compartilhar</button>
+          <button class="btn ghost" data-newweek>Nova semana</button>
+        </div>
+      </div>
+      ${groups.map((g) => `
+        <div class="card">
+          <div class="card-head" style="margin-bottom:4px"><h2>${esc(g.cat)}</h2><span class="muted small">${g.list.filter((i) => sh.done[i.id]).length}/${g.list.length}</span></div>
+          ${g.list.map((i) => `
+            <div class="srow">
+              <label class="check">
+                <input type="checkbox" data-shop="${esc(i.id)}" ${sh.done[i.id] ? 'checked' : ''}>
+                <span class="box">${TICK}</span>
+                <span class="lbl">${esc(i.n)}${i.src ? `<small>${esc(i.src)}</small>` : ''}</span>
+              </label>
+              ${i.rm ? `<button class="del" data-rmx="${esc(i.id)}" aria-label="Remover">×</button>` : ''}
+            </div>`).join('')}
+        </div>`).join('')}`;
+  }
+
+  $('#view-cozinha').innerHTML = seg + body;
+}
+async function shareShop() {
+  const sh = shop();
+  const lines = ['Lista de compras (Projeto Leve)'];
+  shopGroups().forEach((g) => {
+    const pend = g.list.filter((i) => !sh.done[i.id]);
+    if (pend.length) lines.push('', g.cat.toUpperCase(), ...pend.map((i) => `- ${i.n}`));
+  });
+  const text = lines.join('\n');
+  try {
+    if (navigator.share) { await navigator.share({ title: 'Lista de compras', text }); return; }
+    await navigator.clipboard.writeText(text); toast('Lista copiada. É só colar no WhatsApp.');
+  } catch (e) { if (e && e.name !== 'AbortError') toast('Não foi possível compartilhar'); }
+}
+
 /* ---------- Navegação ---------- */
-const TITLES = { hoje: 'Hoje', treino: 'Treino', evolucao: 'Evolução', plano: 'Plano' };
+const TITLES = { hoje: 'Hoje', treino: 'Treino', cozinha: 'Cozinha', evolucao: 'Evolução', plano: 'Plano' };
 let tab = 'hoje';
 function render() {
   const now = new Date();
@@ -459,7 +571,7 @@ function render() {
   $('#hdrTitle').textContent = TITLES[tab];
   document.querySelectorAll('.view').forEach((v) => { v.hidden = v.id !== `view-${tab}`; });
   document.querySelectorAll('.tabbar button').forEach((b) => b.classList.toggle('active', b.dataset.tab === tab));
-  ({ hoje: renderHoje, treino: renderTreino, evolucao: renderEvolucao, plano: renderPlano })[tab]();
+  ({ hoje: renderHoje, treino: renderTreino, cozinha: renderCozinha, evolucao: renderEvolucao, plano: renderPlano })[tab]();
 }
 function go(t) { tab = t; render(); window.scrollTo(0, 0); }
 
@@ -473,6 +585,11 @@ document.addEventListener('change', (e) => {
     day().checks[el.dataset.check] = el.checked; save();
     if (tab === 'hoje') render();
     if (el.checked && score(todayStr()) === 1) toast('Dia 100%! Mandou bem.');
+  }
+  if (el.dataset.shop) {
+    const sh = shop();
+    if (el.checked) sh.done[el.dataset.shop] = true; else delete sh.done[el.dataset.shop];
+    save(); render(); return;
   }
   if (el.dataset.load) {
     const v = el.value.trim(); const d = day();
@@ -490,6 +607,30 @@ document.addEventListener('click', (e) => {
     d.checks.agua = hit; save(); render(); return;
   }
   const g = e.target.closest('[data-go]'); if (g) { go(g.dataset.go); return; }
+  if (e.target.closest('[data-doce]')) { cozSub = 'receitas'; recFilter = 'doce'; go('cozinha'); return; }
+  const cs = e.target.closest('[data-csub]'); if (cs) { cozSub = cs.dataset.csub; render(); return; }
+  const rf = e.target.closest('[data-rfilter]'); if (rf) { recFilter = rf.dataset.rfilter; render(); return; }
+  const ar = e.target.closest('[data-addrec]');
+  if (ar) {
+    const r = RECEITAS.find((x) => x.id === ar.dataset.addrec), sh = shop();
+    let n = 0;
+    r.ing.forEach((ing) => {
+      if (!sh.extra.some((x) => x.src === r.n && x.n === ing)) { sh.extra.push({ id: `r:${r.id}:${n}:${Date.now()}`, n: ing, src: r.n }); n++; }
+    });
+    save(); toast(n ? `${n} itens adicionados em Compras` : 'Esses ingredientes já estão na lista');
+    return;
+  }
+  const rx = e.target.closest('[data-rmx]');
+  if (rx) {
+    const sh = shop(); sh.extra = sh.extra.filter((x) => x.id !== rx.dataset.rmx); delete sh.done[rx.dataset.rmx];
+    save(); render(); return;
+  }
+  if (e.target.closest('[data-shopshare]')) { shareShop(); return; }
+  if (e.target.closest('[data-newweek]')) {
+    if (!confirm('Começar uma lista nova? Desmarca tudo e remove os itens das receitas.')) return;
+    const sh = shop(); sh.done = {}; sh.extra = sh.extra.filter((x) => !x.src);
+    save(); render(); toast('Lista zerada pra nova semana'); return;
+  }
   const ws = e.target.closest('[data-wsel]'); if (ws) { treinoSel = ws.dataset.wsel; render(); return; }
   const st = e.target.closest('[data-set]');
   if (st) {
@@ -508,6 +649,15 @@ document.addEventListener('click', (e) => {
 });
 
 document.addEventListener('submit', (e) => {
+  if (e.target.id === 'shopForm') {
+    e.preventDefault();
+    const v = e.target.elements.novo.value.trim();
+    if (!v) return;
+    shop().extra.push({ id: 'u:' + Date.now(), n: v, src: null });
+    save(); render(); toast('Item adicionado');
+    const inp = $('#shopForm input'); if (inp) inp.focus();
+    return;
+  }
   if (e.target.id !== 'measureForm') return;
   e.preventDefault();
   const f = new FormData(e.target);

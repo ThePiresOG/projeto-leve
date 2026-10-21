@@ -34,6 +34,7 @@
   <main>
     <section class="view" id="view-hoje"></section>
     <section class="view" id="view-treino" hidden></section>
+    <section class="view" id="view-cozinha" hidden></section>
     <section class="view" id="view-evolucao" hidden></section>
     <section class="view" id="view-plano" hidden></section>
   </main>
@@ -52,6 +53,10 @@
     <button data-tab="treino">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 7v10M18 7v10M3 10v4M21 10v4M6 12h12"/></svg>
       <span>Treino</span>
+    </button>
+    <button data-tab="cozinha">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3zm0 0v7"/></svg>
+      <span>Cozinha</span>
     </button>
     <button data-tab="evolucao">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 9l4 4 3-3 5 5"/></svg>
@@ -94,6 +99,7 @@
 
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
+  <script src="cozinha.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

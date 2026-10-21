@@ -1,9 +1,10 @@
-const CACHE = 'leve-v3';
+const CACHE = 'leve-v4';
 const ASSETS = [
   './',
   './index.html',
   './app.css',
   './app.js',
+  './cozinha.js',
   './manifest.webmanifest',
   './icon-192.png',
   './icon-512.png',
