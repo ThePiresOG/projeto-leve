@@ -183,7 +183,7 @@ function renderHoje() {
           <h2>${kg(cw)} kg <span class="muted small">meta ${kg(goal)} kg</span></h2>
           <div class="bubble">${esc(motivation(t, w))}</div>
         </div>
-        <img class="hero-img" src="icons/felipe-meio.png" alt="" width="247" height="480">
+        <img class="hero-img" src="felipe-meio.png" alt="" width="247" height="480">
       </div>
       <p class="muted small" style="margin-top:12px">${esc(ph.tip)}</p>
       <div class="bar"><i style="width:${prog}%"></i></div>
@@ -368,7 +368,7 @@ function renderEvolucao() {
     : 'Registre seu peso toda semana e acompanhe a evolução aqui.';
   $('#view-evolucao').innerHTML = `
     <div class="card me-card">
-      <img src="icons/felipe-corpo.png" alt="" width="263" height="900">
+      <img src="felipe-corpo.png" alt="" width="263" height="900">
       <div><h2>${left === 0 ? 'Chegou lá!' : 'Bora, Felipe!'}</h2><p class="muted" style="margin-top:6px">${esc(msg)}</p></div>
     </div>
     <div class="stats">

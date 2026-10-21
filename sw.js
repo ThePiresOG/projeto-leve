@@ -1,18 +1,18 @@
-const CACHE = 'leve-v2';
+const CACHE = 'leve-v3';
 const ASSETS = [
   './',
   './index.html',
   './app.css',
   './app.js',
   './manifest.webmanifest',
-  './icons/icon-192.png',
-  './icons/icon-512.png',
-  './icons/icon-maskable-512.png',
-  './icons/apple-touch-icon.png',
-  './icons/favicon.png',
-  './icons/felipe-rosto.png',
-  './icons/felipe-meio.png',
-  './icons/felipe-corpo.png'
+  './icon-192.png',
+  './icon-512.png',
+  './icon-maskable-512.png',
+  './apple-touch-icon.png',
+  './favicon.png',
+  './felipe-rosto.png',
+  './felipe-meio.png',
+  './felipe-corpo.png'
 ];
 
 self.addEventListener('install', (e) => {
