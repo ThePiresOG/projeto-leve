@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Projeto Leve</title>
+  <meta name="description" content="Jejum, checklist diário, treino e evolução de peso.">
+  <meta name="theme-color" content="#16654a">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Leve">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" type="image/png" href="icons/favicon.png">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <link rel="stylesheet" href="app.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="hdr-left">
+      <img class="avatar" src="icons/felipe-rosto.png" alt="Felipe" width="48" height="48">
+      <div>
+        <div class="eyebrow" id="hdrDate"></div>
+        <h1 id="hdrTitle">Hoje</h1>
+      </div>
+    </div>
+    <button class="icon-btn" id="btnSettings" aria-label="Configurações">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h0a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51h0a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v0a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+    </button>
+  </header>
+
+  <div id="installBanner" class="install" hidden></div>
+
+  <main>
+    <section class="view" id="view-hoje"></section>
+    <section class="view" id="view-treino" hidden></section>
+    <section class="view" id="view-evolucao" hidden></section>
+    <section class="view" id="view-plano" hidden></section>
+  </main>
+
+  <div id="restPill" class="rest" hidden>
+    <span>Descanso</span><strong id="restTime">1:30</strong>
+    <button id="restAdd" aria-label="Mais 30 segundos">+30s</button>
+    <button id="restStop" aria-label="Encerrar descanso">Pular</button>
+  </div>
+
+  <nav class="tabbar" aria-label="Navegação">
+    <button data-tab="hoje" class="active">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+      <span>Hoje</span>
+    </button>
+    <button data-tab="treino">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 7v10M18 7v10M3 10v4M21 10v4M6 12h12"/></svg>
+      <span>Treino</span>
+    </button>
+    <button data-tab="evolucao">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 9l4 4 3-3 5 5"/></svg>
+      <span>Evolução</span>
+    </button>
+    <button data-tab="plano">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V3H6.5A2.5 2.5 0 0 0 4 5.5z"/><path d="M4 19.5A2.5 2.5 0 0 0 6.5 22H20v-5"/></svg>
+      <span>Plano</span>
+    </button>
+  </nav>
+
+  <dialog id="settings">
+    <form method="dialog" id="settingsForm">
+      <h2>Configurações</h2>
+      <label>Data de início do projeto<input type="date" name="start" required></label>
+      <div class="row2">
+        <label>Peso inicial (kg)<input type="number" name="startWeight" step="0.1" inputmode="decimal" required></label>
+        <label>Meta (kg)<input type="number" name="goal" step="0.1" inputmode="decimal" required></label>
+      </div>
+      <label>Altura (cm)<input type="number" name="height" inputmode="numeric" required></label>
+      <div class="row2">
+        <label>Abre janela<input type="time" name="open" required></label>
+        <label>Fecha janela<input type="time" name="close" required></label>
+      </div>
+      <label>Meta de água (ml)<input type="number" name="water" step="250" inputmode="numeric" required></label>
+      <div class="actions">
+        <button value="cancel" class="btn ghost" formnovalidate>Cancelar</button>
+        <button value="save" class="btn primary">Salvar</button>
+      </div>
+      <hr>
+      <h3>Backup</h3>
+      <p class="muted small">Os dados ficam só neste celular. Exporte um backup de vez em quando.</p>
+      <div class="actions">
+        <button type="button" class="btn ghost" id="btnExport">Exportar</button>
+        <label class="btn ghost file">Importar<input type="file" id="fileImport" accept="application/json,.json" hidden></label>
+      </div>
+      <button type="button" class="btn danger full" id="btnReset">Apagar todos os dados</button>
+    </form>
+  </dialog>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
